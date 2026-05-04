@@ -1,0 +1,30 @@
+# Mapeamento (chave: valor)
+nome: Bella Tavola
+versao: 1.0.0
+ativo: true
+
+# Lista (itens com -)
+categorias:
+  - pizza
+  - massa
+  - sobremesa
+
+
+texto: "Bella Tavola"        # string
+numero_inteiro: 42           # int
+numero_decimal: 3.14         # float
+verdadeiro: true             # bool
+nulo: null                   # null
+lista_inline: [a, b, c]      # lista em uma linha
+mapa_inline: {a: 1, b: 2}   # mapa em uma linha
+
+# Literal (preserva quebras de linha)
+script: |
+  pip install -r requirements.txt
+  pytest tests/ -v
+
+# Dobrado (quebras de linha viram espaços)
+descricao: >
+  Este é um texto longo
+  que será tratado como
+  uma linha só.

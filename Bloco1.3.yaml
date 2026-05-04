@@ -1,0 +1,22 @@
+# Responda às perguntas:
+
+1. Em quais situações este workflow é disparado?
+
+R: Quando o arquivo faz um pull request, disparando a aplicação em si. 
+
+2. Quantos jobs existem? Eles rodam em paralelo ou em sequência?
+
+R: 4 jobs, Sim, executando na mesma aplicação e arquivo YAML. 
+
+3. O job 'relatorio' sempre roda? Quando ele não roda?
+
+R: Nem sempre, quando ele roda em produção e gera uma branch. 
+
+4. O que faz o --tb=short no comando do pytest?
+
+R: Utilizado para configuração de exibição, durante execução de testes. 
+
+5. O step "Verificar formatação" vai falhar se o código não estiver formatado com black. 
+Isso é desejável? Por quê?
+
+R: Não, pois se ele estiver em produção, não executa, somente entrega (CD). 

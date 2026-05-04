@@ -1,0 +1,30 @@
+name: CI Bella Tavola
+on: [push, pull_request]
+
+jobs:
+  test:
+  runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+        python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: |
+        pip install -r requirements.txt
+
+      - name: Rodar testes
+        run: pytest tests/ -v
+        env:
+          HF_TOKEN: $secrets.HF_TOKEN
+
+
+# Erros encontrados 
+
+# Erro 1: Criação dos testes na action. 
+# Erro 2: Criação dos jobs inplícito na action. 
+# Erro 3: Criação do nome run na action.
+# Erro 4: Criação da env na action.

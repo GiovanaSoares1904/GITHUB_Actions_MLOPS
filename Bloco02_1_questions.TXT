@@ -1,0 +1,21 @@
+# Responda às perguntas:
+
+1. Em quais situações este workflow é disparado?
+
+R: Quando ele está na branch main 
+
+2. Quantos jobs existem? Eles rodam em paralelo ou em sequência?
+
+R: Eles rodam em SEQUÊNCIA — 'relatorio' tem 'needs: qualidade', então só começa quando 'qualidade' terminar com sucesso.
+
+3. O job 'relatorio' sempre roda? Quando ele não roda?
+
+R: quando o push é diretamente para o branch main.
+
+4. O que faz o --tb=short no comando do pytest?
+
+R: o resumido costuma ser suficiente para identificar o problema sem poluir demais os logs.
+
+5. O step "Verificar formatação" vai falhar se o código não estiver formatado com black. Isso é desejável? Por quê?
+
+R: a revisão de código. Automatizar a verificação garante que ninguém 'esquece' de formatar antes de fazer o commit.

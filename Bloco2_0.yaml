@@ -1,0 +1,76 @@
+# 1. NOME do workflow (aparece na aba Actions do GitHub)
+name: CI Pipeline
+
+# 2. GATILHOS — quando este workflow deve rodar
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# 3. JOBS — grupos de etapas que rodam em uma máquina
+jobs:
+  test:                          # nome do job (você escolhe)
+    runs-on: ubuntu-latest       # sistema operacional
+
+    # 4. STEPS — etapas executadas em sequência dentro do job
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Rodar testes
+        run: pytest tests/ -v
+
+
+        on:
+  push:                    # roda quando alguém faz push
+    branches: [main]       # apenas no branch main
+
+  pull_request:            # roda quando um PR é aberto ou atualizado
+    branches: [main]       # apenas em PRs direcionados ao branch main
+
+  workflow_dispatch:       # permite rodar manualmente pela interface do GitHub
+
+
+  jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: [...]
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build          # só começa depois que 'build' terminar com sucesso
+    steps: [...]
+
+
+  steps:
+  # Usando uma action pronta (uses)
+  - name: Baixar o código
+    uses: actions/checkout@v4
+
+  # Rodando um comando shell (run)
+  - name: Instalar dependências
+    run: pip install -r requirements.txt
+
+  # Rodando múltiplos comandos
+  - name: Verificar ambiente
+    run: |
+      python --version
+      pip --version
+      pip list
+
+
+      steps:
+  - name: Rodar com variável de ambiente
+    run: python script.py
+    env:
+      AMBIENTE: producao
+      DEBUG: "false"

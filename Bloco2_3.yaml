@@ -1,0 +1,22 @@
+- name: Iniciar a API em background
+  run: |
+    uvicorn main:app &
+    sleep 8    # aumente se necessário
+
+
+# ✏️  Anote o que aconteceu após o push:
+
+# O pipeline passou ou falhou?
+- Não passou, pois não existe a action run na implementação
+
+# Se falhou: em qual step apareceu o erro?
+
+- step 7
+
+# O que o log dizia exatamente?
+
+- Não existe run na action implementada e não teve saída.
+
+# O que você precisou ajustar?
+
+- Colocar um nome na action run 
