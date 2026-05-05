@@ -1,30 +1,65 @@
-# Classifique cada item:
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from routers import pratos, bebidas, pedidos, reservas
+from config import get_settings
 
-# CI, CD (Entrega) ou CD (Implantação). 
+settings = get_settings()
 
-# 1. A cada pull request, os testes de pytest rodam automaticamente.
+app = FastAPI(
+    title=settings.app_name,
+    description=settings.app_description,
+    version=settings.app_version
+)
 
-#    Classificação: CI
-#    Por quê: Porque executa a tarefa, depois realiza a entrega. 
+# --- Manipuladores de Exceção Personalizados ---
 
-# 2. Após os testes passarem, um novo container Docker é gerado
-#    e armazenado no registry, aguardando aprovação para ir a produção.
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    detalhes = [
+        {"campo": " -> ".join(str(loc) for loc in e["loc"]), "mensagem": e["msg"]} 
+        for e in exc.errors()
+    ]
+    
+    return JSONResponse(
+        status_code=422,
+        content={
+            "erro": "Dados de entrada inválidos",
+            "status": 422,
+            "path": str(request.url),
+            "detalhes": detalhes
+        }
+    )
 
-#    Classificação: CD
-#    Por quê: Porque faz a tarefa de implantação, depois executa.
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    """
+    Captura erros de regras de negócio (como reserva não encontrada).
+    """
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "erro": exc.detail, 
+            "status": exc.status_code, 
+            "path": str(request.url), 
+            "detalhes": []
+        }
+    )
 
-# 3. Quando o branch main recebe um merge, a API é publicada
-#    automaticamente no servidor de produção sem nenhuma aprovação manual.
+# --- Inclusão das Rotas ---
 
-#    Classificação: CD
-#    Por quê: porque publica a API, executa a implantação.  
+app.include_router(pratos.router,   prefix="/pratos",   tags=["Pratos"])
+app.include_router(bebidas.router,  prefix="/bebidas",  tags=["Bebidas"])
+app.include_router(pedidos.router,  prefix="/pedidos",  tags=["Pedidos"])
+app.include_router(reservas.router, prefix="/reservas", tags=["Reservas"])
 
-# 4. O pipeline verifica se o requirements.txt está atualizado
-#    em relação às importações do código.
-#    Classificação:CD
-#    Por quê: Porque automatiza o arquivo txt com a atualização, depois executa. 
+# --- Rota Raiz ---
 
-# 5. Após o merge, o model.pkl mais recente é baixado do Hugging Face
-#    Hub e os testes de predição são executados com ele.
-#    Classificação:CI
-#    Por quê: Porque executa o modelo, depois entrega. 
+@app.get("/", tags=["Geral"])
+async def root():
+    return {
+        "restaurante": settings.app_name, 
+        "versao": settings.app_version,
+        "limite_mesas": settings.max_mesas,
+        "status": "API operacional"
+    }
